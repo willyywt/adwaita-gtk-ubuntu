@@ -1,13 +1,3 @@
-gtk3_dir = join_paths(communitheme_dir, 'gtk-3.0')
-
-# theme sources .scss files
-
-# The files that need to be compiled
-gtk3_scss_sources = [
-  'gtk-dark',
-  'gtk',
-]
-
 # Dependencies of the files that need to be compiled
 gtk3_scss_dependencies = [
   '_colors-public.scss',
@@ -15,8 +5,6 @@ gtk3_scss_dependencies = [
   '_common.scss',
   '_drawing.scss',
 ]
-
-gtk3_asset_dir = join_paths(gtk3_dir, 'assets')
 
 gtk3_assets = [
   'assets/bullet-symbolic.svg',
@@ -163,20 +151,30 @@ gtk3_assets = [
   'assets/text-select-start.png',
 ]
 
+
 # generate .css files
 # and install to themes/communitheme/gtk-3.0
 gtk3_scss_dependencies = files(gtk3_scss_dependencies)
-foreach f : gtk3_scss_sources
-    custom_target('generate_' + f,
-        input: f + '.scss',
-        output: f + '.css',
-        depend_files: gtk3_scss_dependencies,
-        command: [sassc, '-a', '@INPUT@', '@OUTPUT@'],
-        build_by_default: true,
-        install: true,
-        install_dir: gtk3_dir,
-    )
+
+gtk3_install_dir = join_paths(gtk_theme_dir, 'Adwaita-Ubuntu', 'gtk-3.0')
+gtk3_asset_install_dir = join_paths(gtk3_install_dir, 'assets')
+custom_target('generate_' + 'gtk',
+    input: 'gtk' + '.scss',
+    output: 'gtk' + '.css',
+    depend_files: gtk3_scss_dependencies,
+    command: [sassc, '-a', '@INPUT@', '@OUTPUT@'],
+    build_by_default: true,
+    install: true,
+    install_dir: gtk3_install_dir,
+)
+install_data(gtk3_assets, install_dir: gtk3_asset_install_dir)
+# Work around meson weakness: meson won't allow us to rename custom_target's output during install
+bash = find_program('bash')
+foreach variant : theme_variants
+  gtk3_install_dir = join_paths(gtk_theme_dir, 'Adwaita-Ubuntu-' + variant_2, 'gtk-3.0')
+  gtk3_asset_install_dir = join_paths(gtk3_install_dir, 'assets')
+  subdir(variant)
+  install_data(gtk3_assets, install_dir: gtk3_asset_install_dir)
 endforeach
 
 # Install asset files to themes/communitheme/gtk-3.0/assets
-install_data(gtk3_assets, install_dir: gtk3_asset_dir)

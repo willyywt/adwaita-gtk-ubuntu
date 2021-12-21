@@ -1,5 +1,3 @@
-gtk2_dir = join_paths(communitheme_dir, 'gtk-2.0')
-
 # static theme files to copy
 gtk2_theme_data_sources = [
   'gtkrc',
@@ -8,7 +6,6 @@ gtk2_theme_data_sources = [
   'hacks.rc',
 ]
 
-gtk2_asset_dir = join_paths(gtk2_dir, 'assets')
 
 # static asset files to copy
 gtk2_asset_data_sources = [
@@ -182,8 +179,15 @@ gtk2_asset_data_sources = [
   'assets/treeview-separator-rtl.png',
 ]
 
-# Install theme files
-install_data(gtk2_theme_data_sources, install_dir: gtk2_dir)
-
-# Install asset files
-install_data(gtk2_asset_data_sources, install_dir: gtk2_asset_dir)
+communitheme_dir = join_paths(gtk_theme_dir, 'Adwaita-Ubuntu')
+gtk2_install_dir = join_paths(communitheme_dir, 'gtk-2.0')
+gtk2_asset_install_dir = join_paths(gtk2_install_dir, 'assets')
+install_data(gtk2_theme_data_sources, install_dir: gtk2_install_dir)
+install_data(gtk2_asset_data_sources, install_dir: gtk2_asset_install_dir)
+foreach variant : theme_variants
+  communitheme_dir = join_paths(gtk_theme_dir, 'Adwaita-Ubuntu-' + variant)
+  gtk2_install_dir = join_paths(communitheme_dir, 'gtk-2.0')
+  gtk2_asset_install_dir = join_paths(gtk2_install_dir, 'assets')
+  install_data(gtk2_theme_data_sources, install_dir: gtk2_install_dir)
+  install_data(gtk2_asset_data_sources, install_dir: gtk2_asset_install_dir)
+endforeach
