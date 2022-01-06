@@ -171,7 +171,7 @@ install_data(gtk3_assets, install_dir: gtk3_asset_install_dir)
 # Work around meson weakness: meson won't allow us to rename custom_target's output during install
 bash = find_program('bash')
 foreach variant : theme_variants
-  gtk3_install_dir = join_paths(gtk_theme_dir, 'Adwaita-Ubuntu-' + variant_2, 'gtk-3.0')
+  gtk3_install_dir = join_paths(gtk_theme_dir, 'Adwaita-Ubuntu-' + variant, 'gtk-3.0')
   gtk3_asset_install_dir = join_paths(gtk3_install_dir, 'assets')
   subdir(variant)
   install_data(gtk3_assets, install_dir: gtk3_asset_install_dir)
